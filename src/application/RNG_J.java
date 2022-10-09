@@ -16,6 +16,8 @@ public class RNG_J extends Application {
 	public final int TEXT_OTHERS_FONT_SIZE = 16;
 	public final int TEXT_GENERATED_RANDOM_NUMBER_FONT_SIZE = 32;
 	public final int BUTTON_WIDTH_SIZE = 200;
+	public final int RANGE_MIN_DEFAULT = 1;
+	public final int RANGE_MAX_DEFAULT = 100;
 
 	public static long generateRandomNumber(int minRange, int maxRange) {
 		return Math.round(Math.random() * (maxRange - minRange) + minRange);
@@ -42,9 +44,11 @@ public class RNG_J extends Application {
 		
 		// TextFields
 		TextField inputMinRangeTextField = new TextField();
+		inputMinRangeTextField.setText(Integer.toString(RANGE_MIN_DEFAULT));
 		inputMinRangeTextField.setFont(Font.font(TEXT_OTHERS_FONT_SIZE));
 		
 		TextField inputMaxRangeTextField = new TextField();
+		inputMaxRangeTextField.setText(Integer.toString(RANGE_MAX_DEFAULT));
 		inputMaxRangeTextField.setFont(Font.font(TEXT_OTHERS_FONT_SIZE));
 		
 		// Buttons
