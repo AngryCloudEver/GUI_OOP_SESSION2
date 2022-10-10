@@ -1,118 +1,170 @@
 package application;
-
+	
 import javafx.application.Application;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
-public class RNG_J extends Application {
-	public final int TEXT_TITLE_FONT_SIZE = 16;
-	public final int TEXT_OTHERS_FONT_SIZE = 16;
-	public final int TEXT_GENERATED_RANDOM_NUMBER_FONT_SIZE = 32;
-	public final int BUTTON_WIDTH_SIZE = 200;
-	public final int RANGE_MIN_DEFAULT = 1;
-	public final int RANGE_MAX_DEFAULT = 100;
 
-	public static long generateRandomNumber(int minRange, int maxRange) {
+public class RNG_j extends Application {
+	public static final String APP_TITLE = "Random Number Generator";
+	public static final int DEFAULT_RANGE_MIN_VALUE = 1;
+	public static final int DEFAULT_RANGE_MAX_VALUE = 100;
+	public static final int GENERATED_VALUE_FONT_SIZE = 32;
+	public static final int PREF_WIDTH_SIZE = 160;
+	
+	public static long generateRandomInteger(int minRange, int maxRange) {
 		return Math.round(Math.random() * (maxRange - minRange) + minRange);
 	}
 	
+	public static double generateRandomFloat(int minRange, int maxRange) {
+		return Math.random() * (maxRange - minRange) + minRange;
+	}
+	
+	public static double roundDown2(double d) {
+	    return Math.floor(d * 1e2) / 1e2;
+	}
+	
+	public static void setInvalid(Label label) {
+		label.setFont(Font.font(GENERATED_VALUE_FONT_SIZE * 0.8));
+		label.setTextFill(Color.RED);
+		label.setText("Invalid input!");
+	}
+	
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
+		// Component Initializations
 		// Labels
-		Label titleLabel = new Label();
-		titleLabel.setFont(Font.font(TEXT_TITLE_FONT_SIZE));
-		titleLabel.setText("Random Number Generator");
+		Label dataTypeLabel = new Label();
+		dataTypeLabel.setText("Data Type");
 		
-		Label inputMinRangeLabel = new Label();
-		inputMinRangeLabel.setFont(Font.font(TEXT_OTHERS_FONT_SIZE));
-		inputMinRangeLabel.setText("Min Range (Inclusive)");
+		Label valueRangeLabel = new Label();
+		valueRangeLabel.setText("Value Range");
 		
-		Label inputMaxRangeLabel = new Label();
-		inputMaxRangeLabel.setFont(Font.font(TEXT_OTHERS_FONT_SIZE));
-		inputMaxRangeLabel.setText("Max Range (Inclusive)");
+		Label rangeMinValueLabel = new Label();
+		rangeMinValueLabel.setText("Min Value (Inclusive)");
 		
-		Label generatedRandomNumberLabel = new Label();
-		generatedRandomNumberLabel.setText("");
-		generatedRandomNumberLabel.setFont(Font.font(TEXT_GENERATED_RANDOM_NUMBER_FONT_SIZE));
+		Label rangeMaxValueLabel = new Label();
+		rangeMaxValueLabel.setText("Max Value (Inclusive)");
 		
-		// TextFields
-		TextField inputMinRangeTextField = new TextField();
-		inputMinRangeTextField.setText(Integer.toString(RANGE_MIN_DEFAULT));
-		inputMinRangeTextField.setFont(Font.font(TEXT_OTHERS_FONT_SIZE));
+		Label generatedValueLabel = new Label();
+		generatedValueLabel.setFont(Font.font(GENERATED_VALUE_FONT_SIZE));
+		generatedValueLabel.setText("");
 		
-		TextField inputMaxRangeTextField = new TextField();
-		inputMaxRangeTextField.setText(Integer.toString(RANGE_MAX_DEFAULT));
-		inputMaxRangeTextField.setFont(Font.font(TEXT_OTHERS_FONT_SIZE));
+		// Text Fields
+		TextField rangeMinValueTextField = new TextField();
+		rangeMinValueTextField.setText(Integer.toString(DEFAULT_RANGE_MIN_VALUE));
+		
+		TextField rangeMaxValueTextField = new TextField();
+		rangeMaxValueTextField.setText(Integer.toString(DEFAULT_RANGE_MAX_VALUE));
 		
 		// Buttons
 		Button generateButton = new Button();
-		generateButton.setPrefWidth(BUTTON_WIDTH_SIZE);
-		generateButton.setFont(Font.font(TEXT_OTHERS_FONT_SIZE));
+		generateButton.setPrefWidth(PREF_WIDTH_SIZE);
 		generateButton.setText("Generate");
+		
+		Button resetButton = new Button();
+		resetButton.setPrefWidth(PREF_WIDTH_SIZE);
+		resetButton.setText("Reset");
+		
+		Button copyButton = new Button();
+		copyButton.setPrefWidth(PREF_WIDTH_SIZE * 0.5);
+		copyButton.setVisible(false);
+		copyButton.setText("Copy");
+		
+		// Choice Boxes
+		ChoiceBox<String> dataTypeChoiceBox = new ChoiceBox<String>();
+		dataTypeChoiceBox.setPrefWidth(PREF_WIDTH_SIZE);
+		dataTypeChoiceBox.getItems().addAll("Integer", "Float (2 Decimal Points)");
+		dataTypeChoiceBox.setValue("Integer");
+		
+		// Event Handling
+		// Buttons
+		// generateButton
 		generateButton.setOnAction(
-				(event) -> {
-					String inputMinRangeString = inputMinRangeTextField.getText();
-					String inputMaxRangeString = inputMaxRangeTextField.getText();
-					int inputMinRange;
-					int inputMaxRange;
-					
+				(e) -> {
 					try {
-						inputMinRange = Integer.parseInt(inputMinRangeString);
-						inputMaxRange = Integer.parseInt(inputMaxRangeString);
+						String rangeMinValueInput = rangeMinValueTextField.getText();
+						String rangeMaxValueInput = rangeMaxValueTextField.getText();
 						
-						String generatedRandomNumber;
+						int rangeMinValue = Integer.parseInt(rangeMinValueInput);
+						int rangeMaxValue = Integer.parseInt(rangeMaxValueInput);
 						
-						if (inputMinRange > inputMaxRange) {
-							generatedRandomNumberLabel.setTextFill(Color.RED);
-							generatedRandomNumberLabel.setFont(Font.font(TEXT_GENERATED_RANDOM_NUMBER_FONT_SIZE * 0.4));
-							generatedRandomNumberLabel.setText("Min range cannot exceeds max range!");
+						if (rangeMinValue > rangeMaxValue) {
+							setInvalid(generatedValueLabel);
 						} else {
-							generatedRandomNumber = Long.toString(generateRandomNumber(inputMaxRange, inputMinRange));
-							generatedRandomNumberLabel.setTextFill(Color.BLACK);
-							generatedRandomNumberLabel.setText(generatedRandomNumber);
+							String dataTypeInput = dataTypeChoiceBox.getValue();
+							String generatedValueString;
+							
+							generatedValueLabel.setFont(Font.font(GENERATED_VALUE_FONT_SIZE));
+							generatedValueLabel.setTextFill(Color.BLACK);
+							copyButton.setVisible(true);
+							
+							if (dataTypeInput.equals("Integer")) {
+								generatedValueString = Long.toString(generateRandomInteger(rangeMinValue, rangeMaxValue));
+								generatedValueLabel.setText(generatedValueString);
+							} else {
+								generatedValueString = Double.toString(roundDown2(generateRandomFloat(rangeMinValue, rangeMaxValue)));
+								generatedValueLabel.setText(generatedValueString);
+							}
 						}
-						
-					} catch (Exception exception) {
-						generatedRandomNumberLabel.setTextFill(Color.RED);
-						generatedRandomNumberLabel.setText("Invalid input!");
+					} catch (NumberFormatException nfe) {
+						setInvalid(generatedValueLabel);
+						copyButton.setVisible(false);
 					}
+				}
+	    );
+		
+		// clearInputButton
+		resetButton.setOnAction(
+				(e) -> {
+					rangeMinValueTextField.setText("1");
+					rangeMaxValueTextField.setText("100");
+					generatedValueLabel.setText("");
+					copyButton.setVisible(false);
 				}
 		);
 		
-		Button clearButton = new Button();
-		clearButton.setText("Clear input");
-		clearButton.setFont(Font.font(TEXT_OTHERS_FONT_SIZE));
-		clearButton.setPrefWidth(BUTTON_WIDTH_SIZE);
-		clearButton.setOnAction(
-				(event) -> {
-					inputMinRangeTextField.setText("");
-					inputMaxRangeTextField.setText("");
-				}		
+		// copyButton
+		copyButton.setOnAction(
+				(e) -> {
+					 final Clipboard clipboard = Clipboard.getSystemClipboard();
+				     final ClipboardContent content = new ClipboardContent();
+				     content.putString(generatedValueLabel.getText());
+				     clipboard.setContent(content);
+				}
 		);
+
+		// Scene Layout
+		GridPane gridPane = new GridPane();
+		gridPane.setPadding(new Insets(32, 32, 32, 32));
+		gridPane.setHgap(16);
+		gridPane.setVgap(16);
+		gridPane.add(dataTypeLabel, 0, 0);
+		gridPane.add(dataTypeChoiceBox, 1, 0);
+		gridPane.add(valueRangeLabel, 0, 1);
+		gridPane.add(rangeMinValueLabel, 0, 2);
+		gridPane.add(rangeMinValueTextField, 1, 2);
+		gridPane.add(rangeMaxValueLabel, 0, 3);
+		gridPane.add(rangeMaxValueTextField, 1, 3);
+		gridPane.add(generateButton, 0, 5);
+		gridPane.add(resetButton, 1, 5);
+		gridPane.add(generatedValueLabel, 0, 6);
+		gridPane.add(copyButton, 1, 6);
+
+		Scene scene = new Scene(gridPane, 400, 320);
 		
-		// Layout
-		GridPane root = new GridPane();
-		root.setAlignment(Pos.CENTER);
-		root.setHgap(8);
-		root.setVgap(8);
-		root.addRow(0, titleLabel);
-		root.addRow(1, inputMinRangeLabel, inputMinRangeTextField);
-		root.addRow(2, inputMaxRangeLabel, inputMaxRangeTextField);
-		root.addRow(3, generateButton, clearButton);
-		root.addRow(4, generatedRandomNumberLabel);
-		
-		// Scene
-		Scene scene = new Scene(root, 500, 500);
-		
-		// Stage
-		primaryStage.setTitle("Random Number Generator");
+		primaryStage.setTitle(APP_TITLE);
+		primaryStage.setResizable(false);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
