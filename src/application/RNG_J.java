@@ -67,10 +67,18 @@ public class RNG_J extends Application {
 						inputMinRange = Integer.parseInt(inputMinRangeString);
 						inputMaxRange = Integer.parseInt(inputMaxRangeString);
 						
-						String generatedRandomNumber = Long.toString(generateRandomNumber(inputMaxRange, inputMinRange));
+						String generatedRandomNumber;
 						
-						generatedRandomNumberLabel.setTextFill(Color.BLACK);
-						generatedRandomNumberLabel.setText(generatedRandomNumber);
+						if (inputMinRange > inputMaxRange) {
+							generatedRandomNumberLabel.setTextFill(Color.RED);
+							generatedRandomNumberLabel.setFont(Font.font(TEXT_GENERATED_RANDOM_NUMBER_FONT_SIZE * 0.4));
+							generatedRandomNumberLabel.setText("Min range cannot exceeds max range!");
+						} else {
+							generatedRandomNumber = Long.toString(generateRandomNumber(inputMaxRange, inputMinRange));
+							generatedRandomNumberLabel.setTextFill(Color.BLACK);
+							generatedRandomNumberLabel.setText(generatedRandomNumber);
+						}
+						
 					} catch (Exception exception) {
 						generatedRandomNumberLabel.setTextFill(Color.RED);
 						generatedRandomNumberLabel.setText("Invalid input!");
