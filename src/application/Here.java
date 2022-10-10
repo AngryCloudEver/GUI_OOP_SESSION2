@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import javafx.scene.text.Font; 
 import javafx.scene.text.Text;
 import javafx.scene.control.Button;
+import javafx.event.ActionEvent;  
+import javafx.event.EventHandler; 
 
 
 
@@ -24,10 +26,16 @@ public class Here extends Application {
 		text.setFont(new Font(45));
 		text.setX(100);
 		text.setY(100);
-		text.setText("Welcome");
+		text.setText("Welcome to RNG (maybe)");
 		
 		//Set Button
 		Button Yenson= new Button("Hi");
+		Yenson.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent arg0) {  
+                // TODO Auto-generated method stub  
+                System.out.println("Take 1");
+            }  
+		});
 		
 		//Group
 		Group group = new Group();
