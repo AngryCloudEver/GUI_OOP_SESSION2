@@ -1,10 +1,7 @@
 package application;
 
-import javafx.application.Application;
-import java.util.Random; 
-import javafx.scene.Group; 
-import javafx.scene.Scene; 
-import javafx.scene.paint.Color; 
+import javafx.application.Application; 
+import javafx.scene.Scene;  
 import javafx.stage.Stage;
 import javafx.scene.text.Font; 
 import javafx.scene.text.Text;
@@ -19,7 +16,7 @@ import javafx.scene.layout.GridPane;
 
 public class Here extends Application {
 	//Fungsi buat RNG
-	public double getRandomNumber(Integer min, Integer max) {
+	public int getRandomNumber(Integer min, Integer max) {
 	    return (int) (Math.round((Math.random() * (max - min)) + min));
 	}
 
@@ -46,15 +43,15 @@ public class Here extends Application {
 		
 		//Set Button
 		Button Yenson= new Button("Help me!!!");
-		Yenson.setScaleX(1.6);
-		Yenson.setScaleY(1.7);
+//		Yenson.setScaleX(2);
+//		Yenson.setScaleY(2);
 		Yenson.setOnAction(new EventHandler<ActionEvent>(){
 			//jika diclick akan berjalan
 			public void handle(ActionEvent arg0) {
 				Integer MINIMAL =Integer.parseInt(a1.getText());
 				Integer MAXIMAL =Integer.parseInt(a2.getText());
 				
-				String Num= Double.toString(getRandomNumber(MINIMAL, MAXIMAL));
+				String Num= Integer.toString(getRandomNumber(MINIMAL, MAXIMAL));
                 // TODO Auto-generated method stub  
                 System.out.println("Looks like Door number " + Num + " is safe");
             }
@@ -71,7 +68,7 @@ public class Here extends Application {
 //		grid.addRow(5, res);
 		
 		//Scene
-		Scene scene= new Scene(grid, 700,500);
+		Scene scene= new Scene(grid, 700,300);
 		
 		//Stage
 		primaryStage.setTitle("Trying to RNG");
