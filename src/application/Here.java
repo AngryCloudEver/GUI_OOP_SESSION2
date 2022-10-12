@@ -8,6 +8,7 @@ import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -43,6 +44,7 @@ public class Here extends Application {
 		
 		//Set Button
 		Button Yenson= new Button("Help me!!!");
+		Yenson.setPrefSize(80, 40);
 //		Yenson.setScaleX(2);
 //		Yenson.setScaleY(2);
 		Yenson.setOnAction(new EventHandler<ActionEvent>(){
@@ -52,7 +54,7 @@ public class Here extends Application {
 				Integer MAXIMAL =Integer.parseInt(a2.getText());
 				
 				String Num= Integer.toString(getRandomNumber(MINIMAL, MAXIMAL));
-                // TODO Auto-generated method stub  
+                // TODO Auto-generated method stub
                 System.out.println("Looks like Door number " + Num + " is safe");
             }
 		});
@@ -61,6 +63,7 @@ public class Here extends Application {
 		GridPane grid= new GridPane();
 		grid.setHgap(8);
 		grid.setVgap(8);
+		grid.setAlignment(Pos.BASELINE_CENTER);
 		grid.add(text, 1, 1);
 		grid.addRow(2, Min, a1);
 		grid.addRow(3, Max, a2);
